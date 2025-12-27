@@ -1,70 +1,169 @@
-# Getting Started with Create React App
+# Restaurant Voice Ordering System
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern restaurant website with integrated Retell AI voice agent ordering system. Customers can browse the menu while simultaneously placing orders through voice conversation.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- Phone number validation before calling
+- Real-time voice ordering with Retell AI
+- Interactive menu display with 85+ items
+- Automatic categorization of menu items
+- Order confirmation with payment link
+- Responsive design for mobile and desktop
+- Mexican restaurant themed UI
 
-### `npm start`
+## Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Frontend**: React 18 with Tailwind CSS
+- **Backend**: Node.js/Express
+- **Voice Agent**: Retell AI Web SDK
+- **Phone Validation**: libphonenumber-js
+- **HTTP Client**: Axios
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Prerequisites
 
-### `npm test`
+Before you begin, ensure you have:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Node.js (v14 or higher)
+- npm or yarn
+- Retell AI account ([Sign up here](https://dashboard.retellai.com))
+- Retell API Key
+- Retell Agent ID
 
-### `npm run build`
+## Getting Started
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 1. Install Dependencies
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+#### Frontend
+```bash
+npm install
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+#### Backend
+```bash
+cd server
+npm install
+cd ..
+```
 
-### `npm run eject`
+### 2. Configure Environment Variables
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+#### Backend Configuration
+Create `server/.env` file:
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```env
+RETELL_API_KEY=your_retell_api_key_here
+RETELL_AGENT_ID=your_agent_id_here
+PORT=3001
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+#### Frontend Configuration (Optional)
+Create `.env` file in root:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```env
+REACT_APP_RETELL_AGENT_ID=your_agent_id_here
+```
 
-## Learn More
+### 3. Get Retell AI Credentials
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+1. Go to [Retell Dashboard](https://dashboard.retellai.com)
+2. Sign up or log in
+3. Navigate to **API Keys** section
+4. Copy your API key
+5. Create a new agent or use existing agent ID
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### 4. Run the Application
 
-### Code Splitting
+#### Terminal 1 - Start Backend Server
+```bash
+cd server
+npm start
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Backend will run on `http://localhost:3001`
 
-### Analyzing the Bundle Size
+#### Terminal 2 - Start Frontend
+```bash
+npm start
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Frontend will run on `http://localhost:3000`
 
-### Making a Progressive Web App
+## Project Structure
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```
+restaurant-voice-ordering/
+├── server/
+│   ├── index.js              # Express backend server
+│   ├── .env                  # Backend environment variables
+│   └── package.json
+├── src/
+│   ├── components/           # React components
+│   ├── utils/                # Utility functions
+│   ├── hooks/                # Custom React hooks
+│   └── App.js                # Main app component
+├── public/
+│   └── restaurant_menu.csv   # Menu data
+└── README.md
+```
 
-### Advanced Configuration
+## How It Works
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+1. **Phone Number Input**: User enters and validates phone number
+2. **Voice Call**: User clicks "Call to Order" to start voice conversation
+3. **Menu Display**: Full menu visible during call
+4. **Order Processing**: Phone number sent to backend in metadata
+5. **Confirmation**: Success modal with payment link details
 
-### Deployment
+## Menu Management
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+Edit `public/restaurant_menu.csv` to update menu items:
 
-### `npm run build` fails to minify
+```csv
+Name,Price
+Birria Combo,28.07
+Plato Birra,24.95
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Categories are auto-detected based on item names.
+
+## API Endpoints
+
+### POST /api/create-web-call
+Creates a new Retell web call with customer phone number in metadata.
+
+### GET /api/health
+Health check endpoint.
+
+## Deployment
+
+### Backend (Railway/Heroku/Render)
+1. Set environment variables
+2. Deploy server folder
+
+### Frontend (Vercel/Netlify)
+1. Build: `npm run build`
+2. Deploy `build/` folder
+3. Update backend URL in `src/hooks/useRetellCall.js`
+
+## Troubleshooting
+
+- **Call not connecting**: Check API key and agent ID
+- **Menu not loading**: Verify CSV exists in public folder
+- **Phone validation issues**: Ensure 10-digit US format
+
+## Security
+
+- API keys never exposed in frontend
+- All Retell calls through backend
+- Phone validation on client and server
+- Use HTTPS in production
+
+## Support
+
+- Retell AI Docs: https://docs.retellai.com
+- Retell Dashboard: https://dashboard.retellai.com
+
+## License
+
+MIT License
