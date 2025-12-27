@@ -76,7 +76,9 @@ const useRetellCall = () => {
       setError(null);
 
       // Call backend to get access token
-      const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:3001';
+      // When deployed as single service, use same origin (relative path)
+      // For local development with separate ports, use environment variable
+      const backendUrl = process.env.REACT_APP_BACKEND_URL || '';
       const response = await axios.post(`${backendUrl}/api/create-web-call`, {
         phoneNumber,
         agentId

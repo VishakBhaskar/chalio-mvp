@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -14,6 +15,10 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 app.use(express.json());
+
+// Serve static files from React build (for production)
+const buildPath = path.join(__dirname, '../build');
+app.use(express.static(buildPath));
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -80,6 +85,12 @@ app.post('/api/create-web-call', async (req, res) => {
       details: error.response?.data?.message || error.message
     });
   }
+});
+
+// Catch-all handler: serve React app for any route not handled by API
+// This must be after all API routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(buildPath, 'index.html'));
 });
 
 // Start server
